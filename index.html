@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Elara Voss — Fractional CMO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              parchment: "#F7F4EF",
+              sand: "#E8E0D4",
+              "sand-dark": "#C9BBA8",
+              umber: "#7A6652",
+              "umber-deep": "#4A3B2E",
+              ink: "#0D0C0B",
+              "ink-soft": "#2A2520",
+              smoke: "#918A80",
+              blush: "#E9D9CC",
+              "blush-light": "#F2EBE4",
+              sage: "#B8C4B1",
+              "sage-muted": "#D4DDD0",
+            },
+            fontFamily: {
+              serif: ['"Cormorant Garamond"', "serif"],
+              sans: ['"DM Sans"', "sans-serif"],
+            },
+            letterSpacing: {
+              widest2: "0.25em",
+              widest3: "0.35em",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      /* ── Global ── */
+      *, *::before, *::after { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        background-color: #F7F4EF;
+        color: #0D0C0B;
+        font-family: "DM Sans", sans-serif;
+        overflow-x: hidden;
+      }
+
+      /* ── Organic blobs (SVG filter + clip-path) ── */
+      .blob-1 {
+        border-radius: 67% 33% 54% 46% / 42% 58% 42% 58%;
+        animation: morph-1 14s ease-in-out infinite alternate;
+      }
+      .blob-2 {
+        border-radius: 38% 62% 43% 57% / 61% 39% 61% 39%;
+        animation: morph-2 18s ease-in-out infinite alternate;
+      }
+      .blob-3 {
+        border-radius: 54% 46% 38% 62% / 47% 53% 47% 53%;
+        animation: morph-3 22s ease-in-out infinite alternate;
+      }
+
+      @keyframes morph-1 {
+        0%   { border-radius: 67% 33% 54% 46% / 42% 58% 42% 58%; }
+        50%  { border-radius: 46% 54% 68% 32% / 58% 42% 58% 42%; }
+        100% { border-radius: 33% 67% 43% 57% / 65% 35% 65% 35%; }
+      }
+      @keyframes morph-2 {
+        0%   { border-radius: 38% 62% 43% 57% / 61% 39% 61% 39%; }
+        50%  { border-radius: 62% 38% 57% 43% / 39% 61% 39% 61%; }
+        100% { border-radius: 50% 50% 38% 62% / 52% 48% 52% 48%; }
+      }
+      @keyframes morph-3 {
+        0%   { border-radius: 54% 46% 38% 62% / 47% 53% 47% 53%; }
+        50%  { border-radius: 38% 62% 54% 46% / 53% 47% 53% 47%; }
+        100% { border-radius: 60% 40% 45% 55% / 40% 60% 40% 60%; }
+      }
+
+      /* ── Marquee ── */
+      .marquee-track {
+        display: flex;
+        width: max-content;
+        animation: marquee-scroll 28s linear infinite;
+      }
+      @keyframes marquee-scroll {
+        from { transform: translateX(0); }
+        to   { transform: translateX(-50%); }
+      }
+
+      /* ── Service Cards ── */
+      .service-card {
+        overflow: hidden;
+        transition: all 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+        height: 200px;
+        cursor: pointer;
+      }
+      .service-card:hover {
+        height: 340px;
+      }
+      .service-card .card-body {
+        opacity: 0;
+        transform: translateY(16px);
+        transition: opacity 0.4s ease 0.15s, transform 0.4s ease 0.15s;
+      }
+      .service-card:hover .card-body {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .service-card .card-num {
+        transition: opacity 0.3s ease, font-size 0.4s ease;
+      }
+      .service-card:hover .card-num {
+        opacity: 0.25;
+        font-size: 1rem;
+      }
+      .service-card .card-arrow {
+        transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+      }
+      .service-card:hover .card-arrow {
+        transform: translateX(6px) rotate(-45deg);
+        opacity: 1;
+      }
+      .service-card .card-line {
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.1s;
+      }
+      .service-card:hover .card-line {
+        transform: scaleX(1);
+      }
+
+      /* Gradient card hover fill */
+      .service-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, #F2EBE4 0%, #E8DDD3 100%);
+        opacity: 0;
+        transition: opacity 0.55s ease;
+        z-index: 0;
+      }
+      .service-card:hover::before {
+        opacity: 1;
+      }
+      .service-card > * { position: relative; z-index: 1; }
+
+      /* ── Stat bars ── */
+      .stat-bar {
+        height: 2px;
+        background: linear-gradient(90deg, #7A6652, #C9BBA8);
+        transform-origin: left;
+        animation: growBar 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        transform: scaleX(0);
+      }
+      @keyframes growBar {
+        to { transform: scaleX(1); }
+      }
+
+      /* ── Reveal on scroll ── */
+      .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+                    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ── Nav hover underline ── */
+      .nav-link {
+        position: relative;
+        padding-bottom: 2px;
+      }
+      .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0; left: 0;
+        width: 100%; height: 1px;
+        background: #7A6652;
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.35s ease;
+      }
+      .nav-link:hover::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+
+      /* ── Cursor dot ── */
+      .cursor-dot {
+        width: 8px; height: 8px;
+        background: #7A6652;
+        border-radius: 50%;
+        position: fixed;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease;
+        mix-blend-mode: multiply;
+      }
+      .cursor-ring {
+        width: 36px; height: 36px;
+        border: 1px solid rgba(122, 102, 82, 0.5);
+        border-radius: 50%;
+        position: fixed;
+        pointer-events: none;
+        z-index: 9998;
+        transform: translate(-50%, -50%);
+        transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                    width 0.4s ease, height 0.4s ease;
+      }
+
+      /* ── Diagonal text clip ── */
+      .hero-gradient-text {
+        background: linear-gradient(135deg, #4A3B2E 0%, #7A6652 50%, #C9BBA8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      /* ── Work item hover ── */
+      .work-item {
+        transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .work-item:hover {
+        padding-left: 1.5rem;
+      }
+      .work-item .work-index {
+        transition: color 0.3s ease;
+      }
+      .work-item:hover .work-index {
+        color: #7A6652;
+      }
+
+      /* ── CTA Button ── */
+      .cta-btn {
+        position: relative;
+        overflow: hidden;
+      }
+      .cta-btn::before {
+        content: '';
+        position: absolute;
+        top: 0; left: -100%;
+        width: 100%; height: 100%;
+        background: #4A3B2E;
+        transition: left 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+        z-index: 0;
+      }
+      .cta-btn:hover::before {
+        left: 0;
+      }
+      .cta-btn span { position: relative; z-index: 1; }
+
+      /* ── Inline serif italic accent ── */
+      .accent-serif {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-weight: 300;
+      }
+    </style>
+  </head>
+
+  <body class="bg-parchment">
+    <!-- Custom cursor -->
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <!-- ════════════════════════════════════════
+         NAVIGATION
+    ════════════════════════════════════════ -->
+    <nav class="fixed top-0 left-0 right-0 z-50 mix-blend-multiply">
+      <div class="max-w-screen-xl mx-auto px-8 py-7 flex items-center justify-between">
+        <!-- Logo -->
+        <a href="#" class="font-serif text-xl font-light tracking-widest2 text-ink-soft">
+          ELARA<span class="text-umber font-normal italic"> Voss</span>
+        </a>
+
+        <!-- Links -->
+        <div class="hidden md:flex items-center gap-10">
+          <a href="#services" class="nav-link font-sans text-xs tracking-widest2 uppercase text-smoke hover:text-ink transition-colors">Services</a>
+          <a href="#work"     class="nav-link font-sans text-xs tracking-widest2 uppercase text-smoke hover:text-ink transition-colors">Work</a>
+          <a href="#about"    class="nav-link font-sans text-xs tracking-widest2 uppercase text-smoke hover:text-ink transition-colors">About</a>
+          <a href="#contact"  class="font-sans text-xs tracking-widest2 uppercase border border-umber text-umber px-5 py-2.5 hover:bg-umber hover:text-parchment transition-all duration-300">
+            Work With Me
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ════════════════════════════════════════
+         HERO — Anti-grid, asymmetric
+    ════════════════════════════════════════ -->
+    <section class="relative min-h-screen overflow-hidden flex items-center pt-24">
+
+      <!-- Organic blob bg — top right -->
+      <div class="blob-1 absolute -top-32 -right-40 w-[680px] h-[680px] opacity-60"
+           style="background: radial-gradient(ellipse at 40% 50%, #E8DDD3 0%, #F2EBE4 55%, transparent 80%);">
+      </div>
+
+      <!-- Organic blob bg — bottom left -->
+      <div class="blob-3 absolute -bottom-48 -left-32 w-[520px] h-[520px] opacity-40"
+           style="background: radial-gradient(ellipse at 60% 40%, #D4DDD0 0%, #E8DDD3 50%, transparent 75%);">
+      </div>
+
+      <!-- Large editorial number — background figure -->
+      <span class="absolute left-[-0.04em] top-1/2 -translate-y-1/2 font-serif font-light leading-none select-none pointer-events-none"
+            style="font-size: clamp(220px, 28vw, 420px); color: rgba(201,187,168,0.18); letter-spacing:-0.03em;">
+        01
+      </span>
+
+      <div class="relative max-w-screen-xl mx-auto px-8 w-full">
+        <div class="grid grid-cols-12 gap-4 items-center min-h-[calc(100vh-6rem)]">
+
+          <!-- Hero text block — asymmetrically offset to col 2–9 -->
+          <div class="col-span-12 md:col-start-2 md:col-span-8 pt-16 md:pt-0">
+            <p class="font-sans text-xs tracking-widest3 uppercase text-umber mb-8 reveal">
+              Fractional CMO &nbsp;·&nbsp; Brand Strategist &nbsp;·&nbsp; Growth Architect
+            </p>
+
+            <h1 class="font-serif font-light leading-[0.92] mb-10 reveal" style="font-size:clamp(58px,8.5vw,130px); letter-spacing:-0.02em;">
+              Marketing<br/>
+              <em class="not-italic hero-gradient-text">that moves</em><br/>
+              <span style="margin-left: clamp(40px, 6vw, 120px); display:inline-block;">markets.</span>
+            </h1>
+
+            <p class="font-sans font-light text-smoke text-lg leading-relaxed max-w-md mb-12 reveal" style="transition-delay:0.15s;">
+              I embed at the C-suite level to architect brand narratives, own revenue marketing, and build the teams that sustain it — without the full-time price tag.
+            </p>
+
+            <div class="flex items-center gap-8 reveal" style="transition-delay:0.25s;">
+              <a href="#services"
+                 class="cta-btn font-sans text-xs tracking-widest2 uppercase bg-umber text-parchment px-8 py-4 inline-block hover:text-parchment transition-colors duration-300">
+                <span>Explore Services</span>
+              </a>
+              <a href="#work" class="font-serif italic font-light text-umber text-lg border-b border-umber/40 pb-0.5 hover:border-umber transition-colors">
+                See case studies →
+              </a>
+            </div>
+          </div>
+
+          <!-- Floating credential card — anti-grid, col 10–12 -->
+          <div class="hidden lg:flex col-start-10 col-span-3 flex-col items-end gap-6 self-end pb-20 reveal" style="transition-delay:0.35s;">
+            <div class="border border-sand-dark/60 p-6 bg-blush-light/60 backdrop-blur-sm max-w-[200px] text-right">
+              <p class="font-serif text-4xl font-light hero-gradient-text">14+</p>
+              <p class="font-sans text-xs text-smoke mt-1 uppercase tracking-widest2">Years in C-Suite Marketing</p>
+            </div>
+            <div class="border border-sand-dark/60 p-6 bg-blush-light/60 backdrop-blur-sm max-w-[200px] text-right">
+              <p class="font-serif text-4xl font-light hero-gradient-text">$2B+</p>
+              <p class="font-sans text-xs text-smoke mt-1 uppercase tracking-widest2">Revenue influenced</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Scroll indicator -->
+      <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-50">
+        <span class="font-sans text-xs tracking-widest2 uppercase text-smoke">Scroll</span>
+        <div class="w-px h-12 bg-gradient-to-b from-smoke to-transparent animate-pulse"></div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+         MARQUEE STRIP
+    ════════════════════════════════════════ -->
+    <div class="overflow-hidden border-y border-sand py-4 bg-sand/40">
+      <div class="marquee-track font-serif italic font-light text-umber/70"
+           style="font-size: 1.15rem; letter-spacing: 0.05em;">
+        <!-- Two copies for seamless loop -->
+        <span class="px-12">Brand Architecture</span>
+        <span class="text-sand-dark px-4">✦</span>
+        <span class="px-12">Demand Generation</span>
+        <span class="text-sand-dark px-4">✦</span>
+        <span class="px-12">Category Design</span>
+        <span class="text-sand-dark px-4">✦</span>
+        <span class="px-12">Product Marketing</span>
+        <span class="text-sand-dark px-4">✦</span>
+        <span class="px-12">Revenue Marketing</span>
+        <span class="text-sand-dark px-4">✦</span>
+        <span class="px-12">GTM Strategy</span>
+        <span class="text-sand-dark px-4">✦</span>
+        <span class="px-12">Founder Narrative</span>
+        <span class="text-sand-dark px-4">✦</span>
+        <span class="px-12">MarTech Stack</span>
+        <span class="text-sand-dark px-4">✦</span>
+        <!-- duplicate -->
+        <span class="px-12">Brand Architecture</span>
+        <span class="text-sand-dark px-4">✦</span>
+        <span class="px-12">Demand Generation</span>
+        <span class="text-sand-dark px-4">✦</span>
+        <span class="px-12">Category Design</span>
+        <span class="text-sand-dark px-4">✦</span>
+        <span class="px-12">Product Marketing</span>
+        <span class="text-sand-dark px-4">✦</span>
+        <span class="px-12">Revenue Marketing</span>
+        <span class="text-sand-dark px-4">✦</span>
+        <span class="px-12">GTM Strategy</span>
+        <span class="text-sand-dark px-4">✦</span>
+        <span class="px-12">Founder Narrative</span>
+        <span class="text-sand-dark px-4">✦</span>
+        <span class="px-12">MarTech Stack</span>
+        <span class="text-sand-dark px-4">✦</span>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════
+         SERVICES — Expandable cards
+    ════════════════════════════════════════ -->
+    <section id="services" class="relative py-32 overflow-hidden">
+
+      <!-- Soft bg blob -->
+      <div class="blob-2 absolute top-20 right-[-200px] w-[500px] h-[500px] opacity-30 pointer-events-none"
+           style="background: radial-gradient(ellipse at 50% 50%, #B8C4B1 0%, #D4DDD0 50%, transparent 75%);">
+      </div>
+
+      <div class="max-w-screen-xl mx-auto px-8">
+
+        <!-- Section header — intentionally asymmetric -->
+        <div class="grid grid-cols-12 mb-20">
+          <div class="col-span-12 md:col-start-1 md:col-span-4 reveal">
+            <p class="font-sans text-xs tracking-widest3 uppercase text-umber mb-4">02 / Services</p>
+            <h2 class="font-serif font-light leading-tight"
+                style="font-size: clamp(38px, 5vw, 72px);">
+              Where I<br/><em class="italic">operate.</em>
+            </h2>
+          </div>
+          <div class="col-span-12 md:col-start-7 md:col-span-5 self-end reveal" style="transition-delay:0.1s;">
+            <p class="font-sans font-light text-smoke leading-relaxed text-base">
+              I don't do retainers for reports. I embed as a senior marketing leader — owning strategy, directing execution, and building the internal capability you need to scale without me.
+            </p>
+          </div>
+        </div>
+
+        <!-- Cards grid — asymmetric column widths -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-sand-dark/30 reveal" style="transition-delay:0.2s;">
+
+          <!-- Card 1 -->
+          <div class="service-card relative bg-parchment p-8 flex flex-col justify-between">
+            <div>
+              <p class="card-num font-serif text-5xl font-light text-sand-dark mb-6">01</p>
+              <h3 class="font-serif font-light text-2xl leading-snug mb-4 text-ink">
+                Brand &amp;<br/>Narrative
+              </h3>
+              <div class="card-line w-full h-px bg-gradient-to-r from-umber to-sand-dark mb-5"></div>
+              <div class="card-body">
+                <p class="font-sans font-light text-smoke text-sm leading-relaxed mb-5">
+                  Positioning, messaging architecture, brand voice, and the visual language system that makes you unmistakable — built to scale with your category, not just your launch.
+                </p>
+                <ul class="space-y-1.5">
+                  <li class="font-sans text-xs text-umber tracking-wider uppercase">— Positioning &amp; ICP</li>
+                  <li class="font-sans text-xs text-umber tracking-wider uppercase">— Messaging Hierarchy</li>
+                  <li class="font-sans text-xs text-umber tracking-wider uppercase">— Brand Identity Audit</li>
+                </ul>
+              </div>
+            </div>
+            <div class="flex items-center justify-between pt-4">
+              <span class="font-serif italic text-sm text-smoke">Explore</span>
+              <svg class="card-arrow w-5 h-5 text-umber opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 7l-10 10M7 7h10v10"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="service-card relative bg-parchment p-8 flex flex-col justify-between">
+            <div>
+              <p class="card-num font-serif text-5xl font-light text-sand-dark mb-6">02</p>
+              <h3 class="font-serif font-light text-2xl leading-snug mb-4 text-ink">
+                Go-to-Market<br/>Strategy
+              </h3>
+              <div class="card-line w-full h-px bg-gradient-to-r from-umber to-sand-dark mb-5"></div>
+              <div class="card-body">
+                <p class="font-sans font-light text-smoke text-sm leading-relaxed mb-5">
+                  From new product launches to market expansions — I design the full GTM playbook, own the calendar, and align sales, product, and marketing around a single revenue narrative.
+                </p>
+                <ul class="space-y-1.5">
+                  <li class="font-sans text-xs text-umber tracking-wider uppercase">— Launch Architecture</li>
+                  <li class="font-sans text-xs text-umber tracking-wider uppercase">— Channel Strategy</li>
+                  <li class="font-sans text-xs text-umber tracking-wider uppercase">— Sales Enablement</li>
+                </ul>
+              </div>
+            </div>
+            <div class="flex items-center justify-between pt-4">
+              <span class="font-serif italic text-sm text-smoke">Explore</span>
+              <svg class="card-arrow w-5 h-5 text-umber opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 7l-10 10M7 7h10v10"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="service-card relative bg-parchment p-8 flex flex-col justify-between">
+            <div>
+              <p class="card-num font-serif text-5xl font-light text-sand-dark mb-6">03</p>
+              <h3 class="font-serif font-light text-2xl leading-snug mb-4 text-ink">
+                Demand<br/>Generation
+              </h3>
+              <div class="card-line w-full h-px bg-gradient-to-r from-umber to-sand-dark mb-5"></div>
+              <div class="card-body">
+                <p class="font-sans font-light text-smoke text-sm leading-relaxed mb-5">
+                  Pipeline is the product. I design the full-funnel demand engine — content, paid, community, and partnerships — then instrument it so you can measure what matters.
+                </p>
+                <ul class="space-y-1.5">
+                  <li class="font-sans text-xs text-umber tracking-wider uppercase">— Funnel Architecture</li>
+                  <li class="font-sans text-xs text-umber tracking-wider uppercase">— Content &amp; SEO</li>
+                  <li class="font-sans text-xs text-umber tracking-wider uppercase">— Paid &amp; Performance</li>
+                </ul>
+              </div>
+            </div>
+            <div class="flex items-center justify-between pt-4">
+              <span class="font-serif italic text-sm text-smoke">Explore</span>
+              <svg class="card-arrow w-5 h-5 text-umber opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 7l-10 10M7 7h10v10"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="service-card relative bg-parchment p-8 flex flex-col justify-between">
+            <div>
+              <p class="card-num font-serif text-5xl font-light text-sand-dark mb-6">04</p>
+              <h3 class="font-serif font-light text-2xl leading-snug mb-4 text-ink">
+                Team &amp;<br/>MarTech
+              </h3>
+              <div class="card-line w-full h-px bg-gradient-to-r from-umber to-sand-dark mb-5"></div>
+              <div class="card-body">
+                <p class="font-sans font-light text-smoke text-sm leading-relaxed mb-5">
+                  Hire right, tool right, operate efficiently. I audit your martech stack, design the team structure, and mentor your marketing hire — so you graduate off the fractional model with confidence.
+                </p>
+                <ul class="space-y-1.5">
+                  <li class="font-sans text-xs text-umber tracking-wider uppercase">— Stack Audit &amp; Design</li>
+                  <li class="font-sans text-xs text-umber tracking-wider uppercase">— Hiring &amp; Coaching</li>
+                  <li class="font-sans text-xs text-umber tracking-wider uppercase">— Ops &amp; Reporting</li>
+                </ul>
+              </div>
+            </div>
+            <div class="flex items-center justify-between pt-4">
+              <span class="font-serif italic text-sm text-smoke">Explore</span>
+              <svg class="card-arrow w-5 h-5 text-umber opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 7l-10 10M7 7h10v10"/>
+              </svg>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+         IMPACT NUMBERS — Diagonal layout
+    ════════════════════════════════════════ -->
+    <section class="relative py-28 overflow-hidden" style="background: linear-gradient(158deg, #EDE7DF 0%, #F7F4EF 60%, #DFE6DB 100%);">
+
+      <div class="blob-1 absolute -bottom-20 -left-20 w-[400px] h-[400px] opacity-20 pointer-events-none"
+           style="background: radial-gradient(ellipse, #C9BBA8 0%, transparent 70%);">
+      </div>
+
+      <div class="max-w-screen-xl mx-auto px-8">
+
+        <p class="font-sans text-xs tracking-widest3 uppercase text-umber mb-16 reveal">03 / Impact</p>
+
+        <!-- Asymmetric stat layout -->
+        <div class="grid grid-cols-12 gap-y-12">
+
+          <!-- Stat 1 — offset left -->
+          <div class="col-span-12 md:col-span-4 reveal">
+            <p class="font-serif font-light leading-none mb-3 hero-gradient-text" style="font-size:clamp(72px,10vw,140px);">$2B</p>
+            <div class="stat-bar w-32 mb-4" style="animation-delay:0.2s;"></div>
+            <p class="font-sans font-light text-smoke max-w-xs">Revenue directly influenced across B2B SaaS, DTC, and enterprise verticals over 14 years.</p>
+          </div>
+
+          <!-- Stat 2 — pushed to center-right -->
+          <div class="col-span-12 md:col-start-5 md:col-span-4 lg:mt-16 reveal" style="transition-delay:0.1s;">
+            <p class="font-serif font-light leading-none mb-3 hero-gradient-text" style="font-size:clamp(72px,10vw,140px);">38</p>
+            <div class="stat-bar w-24 mb-4" style="animation-delay:0.4s;"></div>
+            <p class="font-sans font-light text-smoke max-w-xs">Brands repositioned — from seed-stage startups to Series D and public companies.</p>
+          </div>
+
+          <!-- Stat 3 — pushed to right edge -->
+          <div class="col-span-12 md:col-start-9 md:col-span-4 lg:mt-32 reveal" style="transition-delay:0.2s;">
+            <p class="font-serif font-light leading-none mb-3 hero-gradient-text" style="font-size:clamp(72px,10vw,140px);">4×</p>
+            <div class="stat-bar w-20 mb-4" style="animation-delay:0.6s;"></div>
+            <p class="font-sans font-light text-smoke max-w-xs">Average pipeline growth delivered in the first 6 months of an engagement.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+         SELECTED WORK
+    ════════════════════════════════════════ -->
+    <section id="work" class="relative py-32">
+
+      <div class="max-w-screen-xl mx-auto px-8">
+
+        <div class="grid grid-cols-12 mb-16">
+          <div class="col-span-12 md:col-span-5 reveal">
+            <p class="font-sans text-xs tracking-widest3 uppercase text-umber mb-4">04 / Selected Work</p>
+            <h2 class="font-serif font-light leading-tight" style="font-size:clamp(38px,5vw,72px);">
+              Case<br/><em class="italic">studies.</em>
+            </h2>
+          </div>
+        </div>
+
+        <!-- Work list — editorial style -->
+        <div class="divide-y divide-sand">
+
+          <!-- Item 1 -->
+          <div class="work-item group py-8 flex items-center justify-between gap-6 cursor-pointer reveal">
+            <div class="flex items-center gap-8">
+              <span class="work-index font-sans text-xs text-sand-dark tracking-widest2 uppercase w-8">01</span>
+              <div>
+                <h3 class="font-serif font-light text-2xl md:text-3xl text-ink group-hover:text-umber transition-colors">
+                  Vela Health — Brand Relaunch
+                </h3>
+                <p class="font-sans text-xs text-smoke mt-1 tracking-widest uppercase">B2B SaaS &nbsp;·&nbsp; Series B &nbsp;·&nbsp; 2024</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-6 shrink-0">
+              <span class="hidden md:block font-sans text-sm text-umber font-light">+340% inbound pipeline</span>
+              <svg class="w-6 h-6 text-sand-dark group-hover:text-umber group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="work-item group py-8 flex items-center justify-between gap-6 cursor-pointer reveal" style="transition-delay:0.1s;">
+            <div class="flex items-center gap-8">
+              <span class="work-index font-sans text-xs text-sand-dark tracking-widest2 uppercase w-8">02</span>
+              <div>
+                <h3 class="font-serif font-light text-2xl md:text-3xl text-ink group-hover:text-umber transition-colors">
+                  Maison Crest — Category Creation
+                </h3>
+                <p class="font-sans text-xs text-smoke mt-1 tracking-widest uppercase">DTC Luxury &nbsp;·&nbsp; Seed &nbsp;·&nbsp; 2023</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-6 shrink-0">
+              <span class="hidden md:block font-sans text-sm text-umber font-light">0 → $8M ARR in 14 months</span>
+              <svg class="w-6 h-6 text-sand-dark group-hover:text-umber group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="work-item group py-8 flex items-center justify-between gap-6 cursor-pointer reveal" style="transition-delay:0.2s;">
+            <div class="flex items-center gap-8">
+              <span class="work-index font-sans text-xs text-sand-dark tracking-widest2 uppercase w-8">03</span>
+              <div>
+                <h3 class="font-serif font-light text-2xl md:text-3xl text-ink group-hover:text-umber transition-colors">
+                  Ordain Analytics — GTM Overhaul
+                </h3>
+                <p class="font-sans text-xs text-smoke mt-1 tracking-widest uppercase">B2B Data Platform &nbsp;·&nbsp; Series A &nbsp;·&nbsp; 2023</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-6 shrink-0">
+              <span class="hidden md:block font-sans text-sm text-umber font-light">6-month path to Series B close</span>
+              <svg class="w-6 h-6 text-sand-dark group-hover:text-umber group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="work-item group py-8 flex items-center justify-between gap-6 cursor-pointer reveal" style="transition-delay:0.3s;">
+            <div class="flex items-center gap-8">
+              <span class="work-index font-sans text-xs text-sand-dark tracking-widest2 uppercase w-8">04</span>
+              <div>
+                <h3 class="font-serif font-light text-2xl md:text-3xl text-ink group-hover:text-umber transition-colors">
+                  Foundry Collective — Rebrand + Scale
+                </h3>
+                <p class="font-sans text-xs text-smoke mt-1 tracking-widest uppercase">Professional Services &nbsp;·&nbsp; Growth Stage &nbsp;·&nbsp; 2022</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-6 shrink-0">
+              <span class="hidden md:block font-sans text-sm text-umber font-light">Brand recognition ×3.8</span>
+              <svg class="w-6 h-6 text-sand-dark group-hover:text-umber group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+              </svg>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+         ABOUT — Asymmetric offset
+    ════════════════════════════════════════ -->
+    <section id="about" class="relative py-32 overflow-hidden"
+             style="background: linear-gradient(145deg, #F2EBE4 0%, #F7F4EF 100%);">
+
+      <div class="blob-2 absolute -top-10 left-[-150px] w-[450px] h-[450px] opacity-25 pointer-events-none"
+           style="background: radial-gradient(ellipse, #C9BBA8 0%, transparent 70%);">
+      </div>
+
+      <div class="max-w-screen-xl mx-auto px-8">
+        <div class="grid grid-cols-12 gap-12 items-center">
+
+          <!-- Big pull quote — col 1–7, anti-grid starting at col 2 -->
+          <div class="col-span-12 md:col-start-1 md:col-span-7 reveal">
+            <p class="font-sans text-xs tracking-widest3 uppercase text-umber mb-8">05 / About</p>
+            <blockquote class="font-serif font-light leading-snug text-ink-soft"
+                        style="font-size: clamp(28px, 3.8vw, 56px);">
+              "I've built brand functions at companies from <em class="italic text-umber">6 people to 6,000</em> — the playbook changes, the principles don't."
+            </blockquote>
+            <p class="font-sans font-light text-smoke mt-8 leading-relaxed max-w-xl text-base">
+              I started as a copywriter. Then a strategist. Then a VP. Then a CMO. That path means I understand the <span class="accent-serif text-umber">craft</span> behind the strategy — I can write the brief and run the board meeting. I work with 3–5 companies at a time, in industries where marketing is genuinely the competitive moat.
+            </p>
+            <div class="mt-10 flex flex-wrap gap-3">
+              <span class="font-sans text-xs text-umber border border-umber/40 px-4 py-2 tracking-widest uppercase">B2B SaaS</span>
+              <span class="font-sans text-xs text-umber border border-umber/40 px-4 py-2 tracking-widest uppercase">DTC &amp; Luxury</span>
+              <span class="font-sans text-xs text-umber border border-umber/40 px-4 py-2 tracking-widest uppercase">Professional Services</span>
+              <span class="font-sans text-xs text-umber border border-umber/40 px-4 py-2 tracking-widest uppercase">Fintech</span>
+            </div>
+          </div>
+
+          <!-- Stacked profile cards — col 9–12, slightly offset upward -->
+          <div class="col-span-12 md:col-start-9 md:col-span-4 flex flex-col gap-6 md:-mt-12 reveal" style="transition-delay:0.2s;">
+
+            <!-- Testimonial card 1 -->
+            <div class="border-l-2 border-umber pl-6 py-2">
+              <p class="font-serif italic font-light text-ink-soft text-lg leading-snug mb-3">
+                "Elara gave us 3 years of brand clarity in 90 days."
+              </p>
+              <p class="font-sans text-xs text-smoke uppercase tracking-widest2">— Marcus T., CEO Vela Health</p>
+            </div>
+
+            <!-- Testimonial card 2 -->
+            <div class="border-l-2 border-sand-dark pl-6 py-2">
+              <p class="font-serif italic font-light text-ink-soft text-lg leading-snug mb-3">
+                "She made our marketing feel like it belonged at the same table as our product."
+              </p>
+              <p class="font-sans text-xs text-smoke uppercase tracking-widest2">— Nadia R., Founder Maison Crest</p>
+            </div>
+
+            <!-- Availability badge -->
+            <div class="bg-parchment border border-sand-dark/50 p-5 mt-2">
+              <div class="flex items-center gap-3 mb-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-sage block animate-pulse"></span>
+                <span class="font-sans text-xs text-umber uppercase tracking-widest2">Currently available</span>
+              </div>
+              <p class="font-sans text-xs text-smoke">Accepting 1 new engagement — Q2 2026</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+         CTA / CONTACT
+    ════════════════════════════════════════ -->
+    <section id="contact" class="relative py-36 overflow-hidden bg-umber-deep">
+
+      <!-- Organic blob overlays -->
+      <div class="blob-1 absolute -top-20 -right-20 w-[600px] h-[600px] opacity-10 pointer-events-none"
+           style="background: radial-gradient(ellipse, #C9BBA8 0%, transparent 65%);">
+      </div>
+      <div class="blob-3 absolute -bottom-32 -left-32 w-[500px] h-[500px] opacity-8 pointer-events-none"
+           style="background: radial-gradient(ellipse, #F7F4EF 0%, transparent 65%);">
+      </div>
+
+      <!-- Large bg text -->
+      <span class="absolute right-0 top-1/2 -translate-y-1/2 font-serif font-light select-none pointer-events-none"
+            style="font-size: clamp(140px,22vw,320px); color: rgba(255,255,255,0.03); letter-spacing:-0.03em;">
+        CMO
+      </span>
+
+      <div class="max-w-screen-xl mx-auto px-8 relative z-10">
+        <div class="grid grid-cols-12 items-center gap-12">
+
+          <div class="col-span-12 md:col-span-8 reveal">
+            <p class="font-sans text-xs tracking-widest3 uppercase text-sand-dark/60 mb-8">06 / Let's Talk</p>
+            <h2 class="font-serif font-light text-parchment leading-tight mb-8"
+                style="font-size: clamp(42px, 6vw, 96px);">
+              Ready to make<br/>
+              <em class="italic" style="color: #C9BBA8;">marketing your</em><br/>
+              competitive edge?
+            </h2>
+            <p class="font-sans font-light text-sand/70 max-w-md leading-relaxed mb-10">
+              A 30-minute discovery call is where it starts. I'll give you one concrete insight about your marketing before we decide if we're a fit.
+            </p>
+            <div class="flex flex-wrap items-center gap-6">
+              <a href="mailto:hello@elaravoss.com"
+                 class="cta-btn font-sans text-xs tracking-widest2 uppercase border border-sand-dark text-sand-dark px-10 py-4 inline-block hover:text-umber-deep transition-colors duration-300">
+                <span>Book a call</span>
+              </a>
+              <a href="mailto:hello@elaravoss.com"
+                 class="font-serif italic text-sand/60 text-lg hover:text-sand-dark transition-colors">
+                hello@elaravoss.com
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+         FOOTER
+    ════════════════════════════════════════ -->
+    <footer class="bg-ink py-10 px-8">
+      <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+        <p class="font-serif font-light text-sand/30 text-sm">
+          © 2026 Elara Voss — Fractional CMO
+        </p>
+        <div class="flex items-center gap-8">
+          <a href="#" class="font-sans text-xs text-sand/30 hover:text-sand/70 transition-colors uppercase tracking-widest2">LinkedIn</a>
+          <a href="#" class="font-sans text-xs text-sand/30 hover:text-sand/70 transition-colors uppercase tracking-widest2">Newsletter</a>
+          <a href="#" class="font-sans text-xs text-sand/30 hover:text-sand/70 transition-colors uppercase tracking-widest2">Speaking</a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ════════════════════════════════════════
+         SCRIPTS
+    ════════════════════════════════════════ -->
+    <script>
+      // ── Custom cursor ──
+      const dot  = document.getElementById('cursorDot');
+      const ring = document.getElementById('cursorRing');
+      let mx = 0, my = 0, rx = 0, ry = 0;
+
+      document.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        dot.style.left  = mx + 'px';
+        dot.style.top   = my + 'px';
+      });
+
+      function animateRing() {
+        rx += (mx - rx) * 0.12;
+        ry += (my - ry) * 0.12;
+        ring.style.left = rx + 'px';
+        ring.style.top  = ry + 'px';
+        requestAnimationFrame(animateRing);
+      }
+      animateRing();
+
+      // Expand ring over interactive elements
+      document.querySelectorAll('a, button, .service-card, .work-item').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          ring.style.width  = '60px';
+          ring.style.height = '60px';
+          dot.style.opacity = '0';
+        });
+        el.addEventListener('mouseleave', () => {
+          ring.style.width  = '36px';
+          ring.style.height = '36px';
+          dot.style.opacity = '1';
+        });
+      });
+
+      // ── Scroll reveal ──
+      const revealEls = document.querySelectorAll('.reveal');
+      const observer  = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+      revealEls.forEach(el => observer.observe(el));
+
+      // Trigger elements already in view on load
+      window.addEventListener('load', () => {
+        revealEls.forEach(el => {
+          const rect = el.getBoundingClientRect();
+          if (rect.top < window.innerHeight) {
+            el.classList.add('visible');
+          }
+        });
+      });
+
+      // ── Stat bar animation trigger ──
+      const statBars = document.querySelectorAll('.stat-bar');
+      const barObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.animationPlayState = 'running';
+            barObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.5 });
+
+      statBars.forEach(bar => {
+        bar.style.animationPlayState = 'paused';
+        barObserver.observe(bar);
+      });
+
+      // ── Nav background on scroll ──
+      const nav = document.querySelector('nav');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 80) {
+          nav.style.background = 'rgba(247,244,239,0.92)';
+          nav.style.backdropFilter = 'blur(12px)';
+          nav.style.borderBottom = '1px solid rgba(201,187,168,0.3)';
+        } else {
+          nav.style.background = 'transparent';
+          nav.style.backdropFilter = 'none';
+          nav.style.borderBottom = 'none';
+        }
+      });
+    </script>
+  </body>
+</html>
